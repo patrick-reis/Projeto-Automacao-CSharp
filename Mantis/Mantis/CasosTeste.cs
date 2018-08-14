@@ -5,6 +5,7 @@ using System.Threading;
 using Mantis.PageObjects;
 using System;
 using System.Linq;
+using System.IO;
 
 namespace Mantis
 {
@@ -14,6 +15,7 @@ namespace Mantis
         private LoginPage logar;
         private ReportIssuePage reIssue;
         private ManageProjectsPage maProjects;
+        private static int cont = 0;
 
         /*
          * Testes:
@@ -31,6 +33,7 @@ namespace Mantis
             logar = new LoginPage(driver);
             logar.logaMantis(usuario, senha);
             Thread.Sleep(2000);
+            Screenshot(driver, "RealizaLogin");
             logar.ValidaMsg(elemento, msg);
             Fechar();
         }
@@ -56,6 +59,7 @@ namespace Mantis
             reIssue = new ReportIssuePage(driver);
             reIssue.irReportIssue();
             reIssue.ReportBug(categoria, assunto, descricao);
+            Screenshot(driver, "ReportIssues");
             reIssue.ValidaMsg(elementoMgs, mensagem);
             Fechar();
         }
@@ -78,6 +82,7 @@ namespace Mantis
             maProjects.irManageProjects();
             if (categoria == "Aleatorio") categoria = alfanumericoAleatorio();
             maProjects.AdicionarCategory(categoria);
+            Screenshot(driver, "criarCategoria");
             maProjects.ValidaMsg(elementoMsg, Msg);
             Fechar();
         }
@@ -106,6 +111,16 @@ namespace Mantis
                           .Select(s => s[random.Next(s.Length)])
                           .ToArray());
             return result;
+        }
+
+        public void Screenshot(IWebDriver driver, string nome)
+        {
+            string screenshotsPasta = @"C:\Users\Patrick Reis\Documents\Git\Base2\Mantis\Mantis\Mantis\Screenshot\" + nome + "_" + cont++ +".png";
+            ITakesScreenshot camera = driver as ITakesScreenshot;
+            Screenshot foto = camera.GetScreenshot();
+            foto.SaveAsFile(screenshotsPasta, ScreenshotImageFormat.Png);
+
+
         }
 
     }
