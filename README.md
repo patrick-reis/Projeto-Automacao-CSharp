@@ -1,2 +1,2 @@
 # Mantis
-Automação do aplicação Mantis
+Automação da aplicação Mantis
